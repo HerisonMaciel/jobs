@@ -18,25 +18,29 @@ function agendarJobs(jobs){
 		  dataMaximaProx = new Date(jobs[i]["Data Máxima de conclusão"]).getTime();
 		}
   
-		// Verifique se adicionar o Job ao conjunto atual não ultrapassa 8 horas
-		if (tempoAtual + tempoEstimado <= 8 * 60 * 60 * 1000 && dataMaxima >= dataMaximaProx) {
+		if (verificacaoDoTempoMaximo(tempoAtual,tempoEstimado,dataMaxima,dataMaximaProx)) {
 		  conjuntoAtual.push(jobs[i]);
 		  tempoAtual += tempoEstimado;
 		} else {
-		  // Inicie um novo conjunto com este Job
 		  conjuntosDeJobs.push(conjuntoAtual);
 		  conjuntoAtual = [jobs[i]];
 		  tempoAtual = tempoEstimado;
 		}
 	  }
 	
-	  // Adicione o último conjunto ao array de conjuntos
 	  if (conjuntoAtual.length > 0) {
 		conjuntosDeJobs.push(conjuntoAtual);
 	  }
 	
 	  return conjuntosDeJobs;
 
+}
+
+function verificacaoDoTempoMaximo(tempoAtual,tempoEstimado,dataMaxima,dataMaximaProx){
+	if(tempoAtual + tempoEstimado <= 8 * 60 * 60 * 1000 && dataMaxima >= dataMaximaProx){
+		return true;
+	}
+	return false;
 }
 
 function ordenarJobsPorData(jobs) {
