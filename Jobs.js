@@ -1,3 +1,44 @@
+function agendarJobs(jobs){
+	
+	const jobsAgendados = ordenarJobsPorData(jobs);
+
+	const conjuntosDeJobs = [];
+    let conjuntoAtual = [];
+    let tempoAtual = 0;
+
+	for (i=0; i<jobs.length; i++) {
+        
+		const tempoEstimado = horasParaMilissegundos(jobs[i]["Tempo estimado"]);
+		const dataMaxima = new Date(jobs[i]["Data Máxima de conclusão"]).getTime();
+		let dataMaximaProx;
+
+		if(i==jobs.length-1){
+		  dataMaximaProx = dataMaxima;
+		}else{
+		  dataMaximaProx = new Date(jobs[i]["Data Máxima de conclusão"]).getTime();
+		}
+  
+		// Verifique se adicionar o Job ao conjunto atual não ultrapassa 8 horas
+		if (tempoAtual + tempoEstimado <= 8 * 60 * 60 * 1000 && dataMaxima >= dataMaximaProx) {
+		  conjuntoAtual.push(jobs[i]);
+		  tempoAtual += tempoEstimado;
+		} else {
+		  // Inicie um novo conjunto com este Job
+		  conjuntosDeJobs.push(conjuntoAtual);
+		  conjuntoAtual = [jobs[i]];
+		  tempoAtual = tempoEstimado;
+		}
+	  }
+	
+	  // Adicione o último conjunto ao array de conjuntos
+	  if (conjuntoAtual.length > 0) {
+		conjuntosDeJobs.push(conjuntoAtual);
+	  }
+	
+	  return conjuntosDeJobs;
+
+}
+
 function ordenarJobsPorData(jobs) {
   // Use a função de ordenação "sort" para classificar os Jobs por data máxima de conclusão
   jobs.sort((a, b) => {
@@ -11,7 +52,7 @@ function ordenarJobsPorData(jobs) {
   return jobs;
 }
 
-// Exemplo de uso
+// array de jobs
 const jobs = [
   { 
 		"ID": 1,
