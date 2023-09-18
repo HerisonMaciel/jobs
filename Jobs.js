@@ -36,6 +36,19 @@ function agendarJobs(jobs){
 
 }
 
+function ordenarJobsPorData(jobs) {
+	// Use a função de ordenação "sort" para classificar os Jobs por data máxima de conclusão
+	jobs.sort((a, b) => {
+	  const dataA = new Date(a["Data Máxima de conclusão"]);
+	  const dataB = new Date(b["Data Máxima de conclusão"]);
+  
+	  // Compare as datas máximas de conclusão
+	  return dataA - dataB;
+	});
+  
+	return jobs;
+  }
+
 function verificacaoDoTempoMaximo(tempoAtual,tempoEstimado,dataMaxima,dataMaximaProx){
 	if(tempoAtual + tempoEstimado <= 8 * 60 * 60 * 1000 && dataMaxima >= dataMaximaProx){
 		return true;
@@ -43,18 +56,12 @@ function verificacaoDoTempoMaximo(tempoAtual,tempoEstimado,dataMaxima,dataMaxima
 	return false;
 }
 
-function ordenarJobsPorData(jobs) {
-  // Use a função de ordenação "sort" para classificar os Jobs por data máxima de conclusão
-  jobs.sort((a, b) => {
-    const dataA = new Date(a["Data Máxima de conclusão"]);
-    const dataB = new Date(b["Data Máxima de conclusão"]);
-
-    // Compare as datas máximas de conclusão
-    return dataA - dataB;
-  });
-
-  return jobs;
+function horasParaMilissegundos(tempo) {
+    const partes = tempo.split(" ");
+    const horas = parseFloat(partes[0]);
+    return horas * 60 * 60 * 1000;
 }
+
 
 // array de jobs
 const jobs = [
@@ -94,9 +101,9 @@ const jobs = [
 		"Data Máxima de conclusão": '2020-02-15 12:00:00', 
 		"Tempo estimado": '8 horas'
 	},
-
-  // Outros Jobs...
 ];
 
 const jobsOrdenados = ordenarJobsPorData(jobs);
 console.log(jobsOrdenados);
+
+module.exports = {agendarJobs, ordenarJobsPorData, verificacaoDoTempoMaximo};
